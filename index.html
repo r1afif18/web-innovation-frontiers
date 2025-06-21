@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Innovation Frontiers: Data Science Challenges in Indonesia</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Warm Neutrals -->
+    <!-- Application Structure Plan: SPA with a sticky top navigation to jump to the 4 main 'Frontiers'. Each frontier section introduces the problem, then presents interactive visualizations and 'project blueprints' in a clickable tab or card format. This structure turns a linear report into an exploratory dashboard, allowing users to compare frontiers or deep-dive into a single topic. This flow is designed for quick high-level understanding and interest-driven deep exploration, superior to just scrolling a text document. -->
+    <!-- Visualization & Content Choices: 1. Digital Underbelly: Clear HTML taxonomy table to 'inform' & a conceptual network diagram (HTML/CSS) to 'organize'. Interaction: Tabs to switch between two project blueprints. 2. Food Arteries: Supply chain flowchart (HTML/CSS) to 'organize' & a comparative bar chart (Chart.js) to 'compare' efficiency. Interaction: Hover on the flowchart for tooltips. 3. Fading Voices: Interactive horizontal bar chart (Chart.js) to 'compare' language vitality. Interaction: Buttons to update the chart & display different metrics (web, social, NLP scores). 4. Silent Epidemic: Bubble chart (Chart.js) to 'show relationships' between topics. Interaction: Dropdown to filter data by geographical region (simulation). All these choices use the specified methods (HTML/CSS, Chart.js) and avoid SVG/Mermaid. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F5F5F4; /* stone-100 */
+            color: #44403C; /* stone-700 */
+        }
+        .nav-link {
+            transition: color 0.3s, border-bottom-color 0.3s;
+        }
+        .nav-link:hover, .nav-link.active {
+            color: #F97316; /* orange-500 */
+            border-bottom-color: #F97316; /* orange-500 */
+        }
+        .section-card {
+            background-color: #FFFFFF;
+            border-radius: 0.75rem;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .section-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 350px;
+            max-height: 400px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 400px;
+            }
+        }
+        .tab-button {
+            transition: background-color 0.3s, color 0.3s;
+        }
+        .tab-button.active {
+            background-color: #F97316; /* orange-500 */
+            color: white;
+        }
+        .btn-filter {
+            transition: background-color 0.3s, color 0.3s;
+        }
+        .btn-filter.active {
+            background-color: #16A34A; /* green-600 */
+            color: white;
+        }
+        .modal-overlay {
+            transition: opacity 0.3s ease;
+        }
+        .modal-content {
+            transition: transform 0.3s ease;
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Header & Navigation -->
+    <header id="header" class="bg-white/80 backdrop-blur-lg sticky top-0 z-50 shadow-md">
+        <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <h1 class="text-xl md:text-2xl font-bold text-stone-800">Innovation Frontiers</h1>
+            <div class="hidden md:flex space-x-8">
+                <a href="#digital" class="nav-link border-b-2 border-transparent pb-1">Digital Underbelly</a>
+                <a href="#pangan" class="nav-link border-b-2 border-transparent pb-1">Food Arteries</a>
+                <a href="#bahasa" class="nav-link border-b-2 border-transparent pb-1">Fading Voices</a>
+                <a href="#mental" class="nav-link border-b-2 border-transparent pb-1">Silent Epidemic</a>
+            </div>
+            <div class="md:hidden">
+                <select id="mobile-nav" class="bg-stone-200 border border-stone-300 text-stone-900 text-sm rounded-lg focus:ring-orange-500 focus:border-orange-500 block w-full p-2.5">
+                    <option value="#home">Menu</option>
+                    <option value="#digital">Digital Underbelly</option>
+                    <option value="#pangan">Food Arteries</option>
+                    <option value="#bahasa">Fading Voices</option>
+                    <option value="#mental">Silent Epidemic</option>
+                </select>
+            </div>
+        </nav>
+    </header>
+
+    <main id="home" class="container mx-auto px-6 py-8 md:py-12">
+        <!-- Hero Section -->
+        <section class="text-center mb-16">
+            <h2 class="text-3xl md:text-5xl font-bold text-stone-800 mb-4">Unlocking Indonesia's Data Potential</h2>
+            <p class="max-w-3xl mx-auto text-lg text-stone-600">
+                This application explores four "anti-mainstream" problem areas hidden within Indonesia, where data science can drive significant social and economic impact. Explore each frontier to understand the unique challenges, data landscapes, and proposed innovative project blueprints.
+            </p>
+        </section>
+
+        <!-- Frontiers Grid -->
+        <div class="space-y-16">
+
+            <!-- Frontier 1: Digital Underbelly -->
+            <section id="digital" class="section-card p-6 md:p-8">
+                <div class="text-center mb-8">
+                    <h3 class="text-2xl md:text-3xl font-bold mb-2 text-red-700">Frontier 1: The Digital Underbelly</h3>
+                    <p class="text-lg text-stone-600">Mapping and Mitigating Sophisticated Online Fraud Networks</p>
+                    <p class="mt-4 max-w-4xl mx-auto text-stone-500">
+                       The problem of online fraud in Indonesia has evolved from single incidents into an organized cybercrime ecosystem. An innovative data science approach must shift from reactive detection to proactive network mapping, uncovering syndicate structures, and understanding the linguistic narratives they use to ensnare victims. This section explores how data from public forums and crowdsourced reports can be turned into actionable intelligence.
+                    </p>
+                </div>
+
+                <h4 class="text-xl font-semibold text-center mb-4">Online Fraud Taxonomy in Indonesia</h4>
+                 <div class="overflow-x-auto mb-8">
+                    <table class="min-w-full bg-white border border-stone-200">
+                        <thead class="bg-stone-50">
+                            <tr>
+                                <th class="py-2 px-4 border-b text-left text-sm font-semibold text-stone-600">Category</th>
+                                <th class="py-2 px-4 border-b text-left text-sm font-semibold text-stone-600">Modus Operandi</th>
+                                <th class="py-2 px-4 border-b text-left text-sm font-semibold text-stone-600">Main Vector</th>
+                                <th class="py-2 px-4 border-b text-left text-sm font-semibold text-stone-600">Psychological Trigger</th>
+                            </tr>
+                        </thead>
+                        <tbody class="text-stone-700">
+                            <tr class="hover:bg-stone-50">
+                                <td class="py-2 px-4 border-b">Credential Theft</td>
+                                <td class="py-2 px-4 border-b">Phishing via Fake Links</td>
+                                <td class="py-2 px-4 border-b">Email, SMS, WhatsApp</td>
+                                <td class="py-2 px-4 border-b">Authority, Urgency</td>
+                            </tr>
+                             <tr class="hover:bg-stone-50">
+                                <td class="py-2 px-4 border-b">Malware Delivery</td>
+                                <td class="py-2 px-4 border-b">APK - Wedding Invite/Receipt</td>
+                                <td class="py-2 px-4 border-b">WhatsApp</td>
+                                <td class="py-2 px-4 border-b">Curiosity, Social Obligation</td>
+                            </tr>
+                            <tr class="hover:bg-stone-50">
+                                <td class="py-2 px-4 border-b">Emotional Exploitation</td>
+                                <td class="py-2 px-4 border-b">Love Scam (Romance Fraud)</td>
+                                <td class="py-2 px-4 border-b">Dating Apps, Social Media</td>
+                                <td class="py-2 px-4 border-b">Love, Loneliness, Empathy</td>
+                            </tr>
+                             <tr class="hover:bg-stone-50">
+                                <td class="py-2 px-4 border-b">Financial Fraud</td>
+                                <td class="py-2 px-4 border-b">Part-time Job Offer</td>
+                                <td class="py-2 px-4 border-b">WhatsApp, Telegram</td>
+                                <td class="py-2 px-4 border-b">Greed, Promise of Fast Wealth</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div id="blueprint-tabs-digital" class="w-full">
+                    <div class="flex justify-center border-b border-stone-200 mb-6">
+                        <button data-tab="digital-1" class="tab-button px-4 py-2 -mb-px border-b-2 border-transparent font-medium text-stone-600 hover:text-orange-500 active">Network Mapping</button>
+                        <button data-tab="digital-2" class="tab-button px-4 py-2 -mb-px border-b-2 border-transparent font-medium text-stone-600 hover:text-orange-500">Linguistic Fingerprinting</button>
+                    </div>
+                    <div id="digital-1" class="tab-content">
+                        <h4 class="text-xl font-semibold text-center mb-4">Blueprint 1: Fraud Syndicate Mapping</h4>
+                        <p class="text-center max-w-2xl mx-auto mb-6 text-stone-600">Using Social Network Analysis (SNA) to proactively identify clusters of accounts and phone numbers controlled by the same syndicates, moving from reactive blacklisting to proactive mitigation.</p>
+                        <div class="chart-container">
+                             <canvas id="fraudNetworkChart"></canvas>
+                        </div>
+                    </div>
+                    <div id="digital-2" class="tab-content hidden">
+                        <h4 class="text-xl font-semibold text-center mb-4">Blueprint 2: Linguistic Fingerprinting of Scams</h4>
+                        <p class="text-center max-w-2xl mx-auto text-stone-600">Building an NLP model to detect the narrative patterns and linguistic style of scams, creating a defense system that is adaptive to new, previously unseen scam variants.</p>
+                         <div class="max-w-3xl mx-auto mt-6 bg-stone-50 p-4 rounded-lg border border-stone-200">
+                             <p class="font-mono text-sm text-stone-700">
+                                <span class="text-red-600 font-semibold">&lt;API Request: Suspicious Message Text&gt;</span><br>
+                                "Congratulations! You have been selected... click this link immediately to claim your prize..."<br><br>
+                                <span class="text-green-600 font-semibold">&lt;API Response: Risk Analysis&gt;</span><br>
+                                {<br>
+                                &nbsp;&nbsp;"risk_score": <span class="text-red-500">92.5</span>,<br>
+                                &nbsp;&nbsp;"detected_patterns": ["fake_urgency", "prize_bait", "suspicious_link"],<br>
+                                &nbsp;&nbsp;"narrative_similarity": "Lottery_Scam_Type_A"<br>
+                                }
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Frontier 2: Food Arteries -->
+            <section id="pangan" class="section-card p-6 md:p-8">
+                 <div class="text-center mb-8">
+                    <h3 class="text-2xl md:text-3xl font-bold mb-2 text-green-700">Frontier 2: The Archipelago's Food Arteries</h3>
+                    <p class="text-lg text-stone-600">Optimizing Hyper-Local Agricultural Supply Chains</p>
+                     <p class="mt-4 max-w-4xl mx-auto text-stone-500">
+                        Indonesia's crucial agricultural sector is crippled by a "first-mile data void"—a lack of reliable information on production, quality, and logistics at the farmer level. Rather than a generic solution, this project focuses on modeling a single specific commodity (like cassava) by fusing satellite, weather, and infrastructure data to create actionable intelligence, reducing inefficiency and improving farmer welfare.
+                    </p>
+                </div>
+
+                <h4 class="text-xl font-semibold text-center mb-4">Case Study: The Cassava Supply Chain</h4>
+                <div class="flex flex-col md:flex-row justify-center items-center space-y-4 md:space-y-0 md:space-x-4 mb-8 text-center">
+                    <div class="p-4 bg-green-50 rounded-lg w-full md:w-auto">
+                        <p class="font-bold text-lg text-green-800">Farmer</p>
+                        <p class="text-sm text-green-600">Harvest & Quality Uncertainty</p>
+                    </div>
+                    <div class="text-2xl font-bold text-green-400">&rarr;</div>
+                     <div class="p-4 bg-yellow-50 rounded-lg w-full md:w-auto">
+                        <p class="font-bold text-lg text-yellow-800">Collector</p>
+                        <p class="text-sm text-yellow-600">Logistics Black Hole</p>
+                    </div>
+                    <div class="text-2xl font-bold text-green-400">&rarr;</div>
+                    <div class="p-4 bg-blue-50 rounded-lg w-full md:w-auto">
+                        <p class="font-bold text-lg text-blue-800">Industry</p>
+                        <p class="text-sm text-blue-600">Supply Information Asymmetry</p>
+                    </div>
+                </div>
+
+                <h4 class="text-xl font-semibold text-center mb-4">Blueprint: Predictive Optimization Model</h4>
+                <p class="text-center max-w-2xl mx-auto mb-6 text-stone-600">This model predicts crop yields, recommends optimal harvest times, and calculates efficient logistics routes to maximize farmer income and stabilize industrial supply.</p>
+                <div class="chart-container">
+                    <canvas id="agriOptimizationChart"></canvas>
+                </div>
+            </section>
+
+            <!-- Frontier 3: Fading Voices -->
+            <section id="bahasa" class="section-card p-6 md:p-8">
+                 <div class="text-center mb-8">
+                    <h3 class="text-2xl md:text-3xl font-bold mb-2 text-blue-700">Frontier 3: The Fading Voices</h3>
+                    <p class="text-lg text-stone-600">A Data-Driven Approach to Revitalizing Regional Languages</p>
+                     <p class="mt-4 max-w-4xl mx-auto text-stone-500">
+                        Indonesia, with over 700 languages, faces a linguistic extinction crisis. This project goes beyond qualitative documentation by proposing a quantitative approach: measuring a language's "digital vitality." By analyzing a language's digital footprint on the web and social media, we can create an index to prioritize preservation efforts and develop low-resource NLP tools that catalyze revitalization.
+                    </p>
+                </div>
+                
+                <h4 class="text-xl font-semibold text-center mb-4">Blueprint: Digital Language Vitality Index (DVI)</h4>
+                <p class="text-center max-w-2xl mx-auto mb-6 text-stone-600">This index ranks regional languages not just by speaker count, but by their "digital health." Interact with the chart to see how scores change based on different metrics.</p>
+
+                <div class="flex justify-center space-x-2 mb-4">
+                    <button id="btn-dvi-total" class="btn-filter px-3 py-1 text-sm rounded-full bg-stone-200 active">Total DVI</button>
+                    <button id="btn-dvi-web" class="btn-filter px-3 py-1 text-sm rounded-full bg-stone-200">Web Score</button>
+                    <button id="btn-dvi-social" class="btn-filter px-3 py-1 text-sm rounded-full bg-stone-200">Social Score</button>
+                    <button id="btn-dvi-nlp" class="btn-filter px-3 py-1 text-sm rounded-full bg-stone-200">NLP Score</button>
+                </div>
+                
+                <div class="chart-container">
+                    <canvas id="languageVitalityChart"></canvas>
+                </div>
+            </section>
+
+            <!-- Frontier 4: Silent Epidemic -->
+            <section id="mental" class="section-card p-6 md:p-8">
+                 <div class="text-center mb-8">
+                    <h3 class="text-2xl md:text-3xl font-bold mb-2 text-purple-700">Frontier 4: The Silent Epidemic</h3>
+                    <p class="text-lg text-stone-600">Quantifying Mental Health Stigma and Access Barriers</p>
+                    <p class="mt-4 max-w-4xl mx-auto text-stone-500">
+                        Deep-seated cultural stigma prevents many Indonesians from seeking mental health support. Since honest conversations often happen anonymously online, these platforms become a rich data source. This project aims to "diagnose society" by analyzing public discourse to map the landscape of stigma, identify access barriers, and inform culturally and geographically relevant public health interventions.
+                    </p>
+                </div>
+                
+                <h4 class="text-xl font-semibold text-center mb-4">Blueprint: Mental Health Discourse Dashboard</h4>
+                <p class="text-center max-w-2xl mx-auto mb-6 text-stone-600">Dynamically mapping discussion topics and stigma levels across Indonesia to help policymakers allocate resources and design more effective campaigns. Select a region to see a simulation of differing discussion focuses.</p>
+
+                <div class="max-w-xs mx-auto mb-4">
+                     <select id="region-filter" class="bg-stone-200 border border-stone-300 text-stone-900 text-sm rounded-lg focus:ring-purple-500 focus:border-purple-500 block w-full p-2.5">
+                        <option value="nasional">National</option>
+                        <option value="jakarta">DKI Jakarta (Simulated)</option>
+                        <option value="jabar">West Java (Simulated)</option>
+                        <option value="jatim">East Java (Simulated)</option>
+                    </select>
+                </div>
+                
+                <div class="chart-container">
+                    <canvas id="mentalHealthChart"></canvas>
+                </div>
+            </section>
+            
+            <!-- Conclusion Table -->
+            <section id="conclusion" class="p-6 md:p-8">
+                <div class="text-center mb-8">
+                    <h3 class="text-2xl md:text-3xl font-bold mb-2 text-stone-800">Project Decision Framework</h3>
+                    <p class="text-lg text-stone-600">Compare each frontier on key metrics to align a project with your interests and career goals.</p>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="min-w-full bg-white rounded-lg shadow">
+                        <thead class="bg-stone-50">
+                            <tr>
+                                <th class="py-3 px-4 text-left text-sm font-semibold text-stone-600">Frontier</th>
+                                <th class="py-3 px-4 text-left text-sm font-semibold text-stone-600">Social Impact Potential</th>
+                                <th class="py-3 px-4 text-left text-sm font-semibold text-stone-600">Data Accessibility</th>
+                                <th class="py-3 px-4 text-left text-sm font-semibold text-stone-600">Ethical Risk</th>
+                                <th class="py-3 px-4 text-left text-sm font-semibold text-stone-600">"Anti-Mainstream" Score</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-stone-200">
+                             <tr class="hover:bg-stone-50">
+                                <td class="py-3 px-4 font-medium text-red-700">Digital Underbelly</td>
+                                <td class="py-3 px-4">High</td>
+                                <td class="py-3 px-4">Medium</td>
+                                <td class="py-3 px-4 text-orange-600">Medium</td>
+                                <td class="py-3 px-4 font-bold">5 / 5</td>
+                            </tr>
+                            <tr class="hover:bg-stone-50">
+                                <td class="py-3 px-4 font-medium text-green-700">Food Arteries</td>
+                                <td class="py-3 px-4">High</td>
+                                <td class="py-3 px-4 text-red-600">Low</td>
+                                <td class="py-3 px-4">Low</td>
+                                <td class="py-3 px-4 font-bold">4 / 5</td>
+                            </tr>
+                            <tr class="hover:bg-stone-50">
+                                <td class="py-3 px-4 font-medium text-blue-700">Fading Voices</td>
+                                <td class="py-3 px-4">High</td>
+                                <td class="py-3 px-4">Medium</td>
+                                <td class="py-3 px-4">Low</td>
+                                <td class="py-3 px-4 font-bold">5 / 5</td>
+                            </tr>
+                           <tr class="hover:bg-stone-50">
+                                <td class="py-3 px-4 font-medium text-purple-700">Silent Epidemic</td>
+                                <td class="py-3 px-4 text-green-600">Very High</td>
+                                <td class="py-3 px-4">Medium</td>
+                                <td class="py-3 px-4 text-red-600">Very High</td>
+                                <td class="py-3 px-4 font-bold">5 / 5</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+        </div>
+    </main>
+    
+    <!-- License Modal -->
+    <div id="licenseModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black bg-opacity-50 modal-overlay opacity-0 pointer-events-none">
+        <div class="bg-white rounded-lg shadow-xl w-full max-w-2xl modal-content transform scale-95">
+            <div class="px-6 py-4 border-b border-stone-200 flex justify-between items-center">
+                <h3 class="text-lg font-semibold text-stone-800">MIT License</h3>
+                <button id="closeModal" class="text-stone-500 hover:text-stone-800">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
+            </div>
+            <div class="p-6 text-sm text-stone-600 space-y-4 max-h-[60vh] overflow-y-auto">
+                <p>Copyright (c) 2025 Rafif Sudanta</p>
+                <p>Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:</p>
+                <p>The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.</p>
+                <p>THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.</p>
+            </div>
+        </div>
+    </div>
+
+
+    <footer class="bg-stone-800 text-white mt-16">
+        <div class="container mx-auto px-6 py-8 text-center">
+            <div class="mb-6">
+                <p class="font-semibold">Created by Rafif Sudanta</p>
+                <div class="flex justify-center items-center space-x-4 mt-2 text-stone-300">
+                    <a href="mailto:rafifsudanta1@gmail.com" class="hover:text-orange-400 transition-colors">Email</a>
+                    <span>&middot;</span>
+                    <a href="https://www.linkedin.com/in/rafif-sudanta/" target="_blank" rel="noopener noreferrer" class="hover:text-orange-400 transition-colors">LinkedIn</a>
+                    <span>&middot;</span>
+                    <a href="https://github.com/r1afif18" target="_blank" rel="noopener noreferrer" class="hover:text-orange-400 transition-colors">GitHub</a>
+                </div>
+            </div>
+            <p>&copy; 2025 Interactive Analysis of Data Science Innovation Frontiers.</p>
+            <p class="text-sm text-stone-400 mt-2">Released under the <a href="#" id="openLicenseModal" class="underline hover:text-orange-400">MIT License</a>.</p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            
+            // --- Navigation Logic ---
+            const mobileNav = document.getElementById('mobile-nav');
+            if (mobileNav) {
+                mobileNav.addEventListener('change', (e) => {
+                    const targetId = e.target.value;
+                    if (targetId) {
+                        const targetElement = document.querySelector(targetId);
+                        if(targetElement) {
+                           targetElement.scrollIntoView({ behavior: 'smooth' });
+                        }
+                    }
+                });
+            }
+
+            const navLinks = document.querySelectorAll('.nav-link');
+            const sections = document.querySelectorAll('section[id]');
+            
+            function updateActiveLink() {
+                let index = sections.length;
+                while(--index && window.scrollY + 100 < sections[index].offsetTop) {}
+                
+                navLinks.forEach((link) => link.classList.remove('active'));
+                if(sections[index]) {
+                    const activeLink = document.querySelector(`.nav-link[href="#${sections[index].id}"]`);
+                    if(activeLink) activeLink.classList.add('active');
+                }
+            }
+            window.addEventListener('scroll', updateActiveLink);
+            updateActiveLink();
+
+            // --- Digital Underbelly Tabs ---
+            const digitalTabButtons = document.querySelectorAll('#blueprint-tabs-digital .tab-button');
+            const digitalTabContents = document.querySelectorAll('#blueprint-tabs-digital .tab-content');
+
+            digitalTabButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const tabId = button.dataset.tab;
+
+                    digitalTabButtons.forEach(btn => btn.classList.remove('active'));
+                    button.classList.add('active');
+
+                    digitalTabContents.forEach(content => {
+                        if (content.id === tabId) {
+                            content.classList.remove('hidden');
+                        } else {
+                            content.classList.add('hidden');
+                        }
+                    });
+                });
+            });
+            
+             // --- Chart Initialization ---
+            let fraudNetworkChart, agriOptimizationChart, languageVitalityChart, mentalHealthChart;
+
+            // Chart 1: Fraud Network (Conceptual)
+            const ctxFraud = document.getElementById('fraudNetworkChart')?.getContext('2d');
+            if (ctxFraud) {
+                 fraudNetworkChart = new Chart(ctxFraud, {
+                    type: 'bubble',
+                    data: {
+                        datasets: [
+                            { label: 'Mule Accounts', data: [{x:2, y:3, r:15}], backgroundColor: 'rgba(239, 68, 68, 0.7)' },
+                            { label: 'Social Engineering Operators', data: [{x:4, y:5, r:25}], backgroundColor: 'rgba(234, 179, 8, 0.7)' },
+                            { label: 'Malware Developers', data: [{x:6, y:2, r:10}], backgroundColor: 'rgba(124, 58, 237, 0.7)' },
+                            { label: 'Data Brokers', data: [{x:8, y:6, r:20}], backgroundColor: 'rgba(217, 119, 6, 0.7)' },
+                            { label: 'Victims', data: [{x:1,y:6,r:5}, {x:5,y:1,r:5}, {x:9,y:3,r:5}], backgroundColor: 'rgba(107, 114, 128, 0.7)' }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            title: { display: true, text: 'Conceptual Visualization of the Fraud Ecosystem' },
+                            legend: { position: 'bottom' }
+                        },
+                        scales: {
+                            x: { display: false },
+                            y: { display: false }
+                        }
+                    }
+                });
+            }
+
+            // Chart 2: Agriculture Optimization
+            const ctxAgri = document.getElementById('agriOptimizationChart')?.getContext('2d');
+            if (ctxAgri) {
+                agriOptimizationChart = new Chart(ctxAgri, {
+                    type: 'bar',
+                    data: {
+                        labels: ['Farmer Cluster A', 'Farmer Cluster B', 'Farmer Cluster C', 'Farmer Cluster D'],
+                        datasets: [
+                            {
+                                label: 'Actual Income (IDR Million)',
+                                data: [120, 150, 90, 110],
+                                backgroundColor: 'rgba(234, 179, 8, 0.6)',
+                                borderColor: 'rgba(234, 179, 8, 1)',
+                                borderWidth: 1
+                            },
+                            {
+                                label: 'Model-Boosted Income (IDR Million)',
+                                data: [155, 180, 130, 145],
+                                backgroundColor: 'rgba(34, 197, 94, 0.6)',
+                                borderColor: 'rgba(34, 197, 94, 1)',
+                                borderWidth: 1
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        indexAxis: 'y',
+                        plugins: {
+                            title: { display: true, text: 'Estimated Farmer Income Increase with Optimization Model' },
+                            legend: { position: 'bottom' },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        return `${context.dataset.label}: ${context.raw} Million IDR`;
+                                    }
+                                }
+                            }
+                        },
+                        scales: {
+                            x: { beginAtZero: true, title: { display: true, text: 'Income (IDR Million)' } }
+                        }
+                    }
+                });
+            }
+
+            // Chart 3: Language Vitality
+            const ctxLang = document.getElementById('languageVitalityChart')?.getContext('2d');
+            if(ctxLang) {
+                const langData = {
+                    labels: ['Javanese', 'Sundanese', 'Acehnese', 'Buginese', 'Tobelo', 'Wabo'],
+                    scores: {
+                        total: [7.2, 6.1, 4.3, 3.4, 1.1, 0.4],
+                        web: [8, 7, 4, 3, 2, 1],
+                        social: [7, 6, 5, 4, 1, 0],
+                        nlp: [6, 5, 4, 3, 0, 0]
+                    }
+                };
+                
+                languageVitalityChart = new Chart(ctxLang, {
+                    type: 'bar',
+                    data: {
+                        labels: langData.labels,
+                        datasets: [{
+                            label: 'Digital Vitality Index (DVI)',
+                            data: langData.scores.total,
+                            backgroundColor: [
+                                'rgba(22, 163, 74, 0.7)',
+                                'rgba(37, 99, 235, 0.7)',
+                                'rgba(219, 39, 119, 0.7)',
+                                'rgba(249, 115, 22, 0.7)',
+                                'rgba(107, 114, 128, 0.7)',
+                                'rgba(217, 70, 239, 0.7)'
+                            ],
+                        }]
+                    },
+                    options: {
+                        indexAxis: 'y',
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            title: { display: true, text: 'Digital Vitality Comparison of Regional Languages' },
+                            legend: { display: false }
+                        },
+                         scales: {
+                            x: { beginAtZero: true, max: 10, title: {display: true, text: 'Score (0-10)'} }
+                        }
+                    }
+                });
+
+                function updateLangChart(metric) {
+                    const filterButtons = document.querySelectorAll('#bahasa .btn-filter');
+                    filterButtons.forEach(b => b.classList.remove('active'));
+                    document.getElementById(`btn-dvi-${metric}`).classList.add('active');
+
+                    let newData;
+                    let newLabel;
+                    switch(metric) {
+                        case 'web': newData = langData.scores.web; newLabel = 'Web Presence Score'; break;
+                        case 'social': newData = langData.scores.social; newLabel = 'Social Media Score'; break;
+                        case 'nlp': newData = langData.scores.nlp; newLabel = 'NLP Readiness Score'; break;
+                        default: newData = langData.scores.total; newLabel = 'Digital Vitality Index (DVI)';
+                    }
+                    languageVitalityChart.data.datasets[0].data = newData;
+                    languageVitalityChart.data.datasets[0].label = newLabel;
+                    languageVitalityChart.update();
+                }
+
+                document.getElementById('btn-dvi-total').addEventListener('click', () => updateLangChart('total'));
+                document.getElementById('btn-dvi-web').addEventListener('click', () => updateLangChart('web'));
+                document.getElementById('btn-dvi-social').addEventListener('click', () => updateLangChart('social'));
+                document.getElementById('btn-dvi-nlp').addEventListener('click', () => updateLangChart('nlp'));
+            }
+
+            // Chart 4: Mental Health Discourse
+            const ctxMental = document.getElementById('mentalHealthChart')?.getContext('2d');
+            if(ctxMental) {
+                const mentalData = {
+                    nasional: [
+                        { label: 'Work Anxiety', v: 85, x: 25, y: 30 },
+                        { label: 'Family Pressure', v: 70, x: 60, y: 70 },
+                        { label: 'Loneliness & Isolation', v: 90, x: 75, y: 25 },
+                        { label: 'Therapy Costs', v: 65, x: 40, y: 60 },
+                        { label: 'Stigma as "Disgrace"', v: 75, x: 15, y: 75 },
+                        { label: 'Religious Approaches', v: 50, x: 50, y: 10 },
+                    ],
+                    jakarta: [
+                        { label: 'Work Anxiety', v: 100, x: 25, y: 30 }, // higher
+                        { label: 'Family Pressure', v: 60, x: 60, y: 70 }, // lower
+                        { label: 'Loneliness & Isolation', v: 95, x: 75, y: 25 },
+                        { label: 'Therapy Costs', v: 80, x: 40, y: 60 }, // higher
+                        { label: 'Stigma as "Disgrace"', v: 50, x: 15, y: 75 }, // lower
+                        { label: 'Religious Approaches', v: 30, x: 50, y: 10 }, // lower
+                    ],
+                    jabar: [
+                        { label: 'Work Anxiety', v: 70, x: 25, y: 30 },
+                        { label: 'Family Pressure', v: 85, x: 60, y: 70 }, // higher
+                        { label: 'Loneliness & Isolation', v: 80, x: 75, y: 25 },
+                        { label: 'Therapy Costs', v: 55, x: 40, y: 60 },
+                        { label: 'Stigma as "Disgrace"', v: 80, x: 15, y: 75 },
+                        { label: 'Religious Approaches', v: 90, x: 50, y: 10 }, // higher
+                    ],
+                    jatim: [
+                        { label: 'Work Anxiety', v: 75, x: 25, y: 30 },
+                        { label: 'Family Pressure', v: 80, x: 60, y: 70 },
+                        { label: 'Loneliness & Isolation', v: 85, x: 75, y: 25 },
+                        { label: 'Therapy Costs', v: 60, x: 40, y: 60 },
+                        { label: 'Stigma as "Disgrace"', v: 90, x: 15, y: 75 }, // higher
+                        { label: 'Religious Approaches', v: 85, x: 50, y: 10 }, // higher
+                    ],
+                };
+
+                mentalHealthChart = new Chart(ctxMental, {
+                    type: 'bubble',
+                    data: {
+                        datasets: mentalData.nasional.map(d => ({
+                            label: d.label,
+                            data: [{ x: d.x, y: d.y, r: d.v / 4 }],
+                            backgroundColor: `rgba(${d.x * 2.5}, ${d.y * 2.5}, ${200 - (d.x+d.y)}, 0.7)`,
+                        }))
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            title: { display: true, text: 'Map of Mental Health Discussion Topics (Size = Discussion Volume)' },
+                            legend: { position: 'bottom' }
+                        },
+                        scales: {
+                           x: { display: false, min:0, max: 100 },
+                           y: { display: false, min:0, max: 100 }
+                        }
+                    }
+                });
+
+                document.getElementById('region-filter').addEventListener('change', function() {
+                    const region = this.value;
+                    const newData = mentalData[region] || mentalData.nasional;
+                    mentalHealthChart.data.datasets.forEach((dataset, index) => {
+                        dataset.data = [{
+                            x: newData[index].x,
+                            y: newData[index].y,
+                            r: newData[index].v / 4
+                        }];
+                    });
+                    mentalHealthChart.update();
+                });
+            }
+            
+            // --- License Modal Logic ---
+            const licenseModal = document.getElementById('licenseModal');
+            const openLicenseModal = document.getElementById('openLicenseModal');
+            const closeModal = document.getElementById('closeModal');
+
+            // Defensive check to prevent errors if elements are not found
+            if (licenseModal && openLicenseModal && closeModal) {
+                const modalContent = licenseModal.querySelector('.modal-content');
+
+                function showModal() {
+                    // Also check for modalContent inside the function
+                    if(modalContent) {
+                        licenseModal.classList.remove('pointer-events-none');
+                        licenseModal.classList.remove('opacity-0');
+                        modalContent.classList.remove('scale-95');
+                    }
+                }
+
+                function hideModal() {
+                    if(modalContent) {
+                        licenseModal.classList.add('opacity-0');
+                        modalContent.classList.add('scale-95');
+                        setTimeout(() => {
+                            licenseModal.classList.add('pointer-events-none');
+                        }, 300);
+                    }
+                }
+
+                openLicenseModal.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    showModal();
+                });
+
+                closeModal.addEventListener('click', hideModal);
+
+                licenseModal.addEventListener('click', (e) => {
+                    // Close if the user clicks on the overlay (the modal itself) but not the content
+                    if (e.target === licenseModal) {
+                        hideModal();
+                    }
+                });
+            }
+        });
+    </script>
+
+</body>
+</html>
